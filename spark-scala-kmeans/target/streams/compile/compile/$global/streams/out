@@ -1,0 +1,16 @@
+[0m[[0m[31merror[0m] [0m[0m/home/e/SE751Research/spark-scala-kmeans/src/main/scala/Main.scala:119:13: type mismatch;[0m
+[0m[[0m[31merror[0m] [0m[0m found   : Double[0m
+[0m[[0m[31merror[0m] [0m[0m required: Float[0m
+[0m[[0m[31merror[0m] [0m[0m        sum += data(m) >< newCent(m.asInstanceOf[Int])[0m
+[0m[[0m[31merror[0m] [0m[0m            ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/e/SE751Research/spark-scala-kmeans/src/main/scala/Main.scala:121:11: type mismatch;[0m
+[0m[[0m[31merror[0m] [0m[0m found   : Double[0m
+[0m[[0m[31merror[0m] [0m[0m required: Float[0m
+[0m[[0m[31merror[0m] [0m[0m      sum *= math.random[0m
+[0m[[0m[31merror[0m] [0m[0m          ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/e/SE751Research/spark-scala-kmeans/src/main/scala/Main.scala:124:15: type mismatch;[0m
+[0m[[0m[31merror[0m] [0m[0m found   : Double[0m
+[0m[[0m[31merror[0m] [0m[0m required: Float[0m
+[0m[[0m[31merror[0m] [0m[0m          sum -= data(m) >< newCent(m.asInstanceOf[Int])[0m
+[0m[[0m[31merror[0m] [0m[0m              ^[0m
+[0m[[0m[31merror[0m] [0m[0mthree errors found[0m

@@ -43,6 +43,7 @@ MIN_VERSION_haskell_cloud_mapreduce	haskell-cloud/dist/build/autogen/cabal_macro
 MIN_VERSION_random	haskell-cloud/dist/build/autogen/cabal_macros.h	68;"	d
 MIN_VERSION_random	spark-mr/dist/build/eta-0.7.1.3/spark-mr-0.1.0.0/x/spark-mr/build/spark-mr/autogen/cabal_macros.h	52;"	d
 MIN_VERSION_spark_mr	spark-mr/dist/build/eta-0.7.1.3/spark-mr-0.1.0.0/x/spark-mr/build/spark-mr/autogen/cabal_macros.h	8;"	d
+SLIC	SLIC.py	/^class SLIC:$/;"	c
 TOOL_VERSION_alex	haskell-cloud/dist/build/autogen/cabal_macros.h	74;"	d
 TOOL_VERSION_alex	spark-mr/dist/build/eta-0.7.1.3/spark-mr-0.1.0.0/x/spark-mr/build/spark-mr/autogen/cabal_macros.h	60;"	d
 TOOL_VERSION_cpphs	haskell-cloud/dist/build/autogen/cabal_macros.h	81;"	d
@@ -78,3 +79,16 @@ VERSION_haskell_cloud_mapreduce	haskell-cloud/dist/build/autogen/cabal_macros.h	
 VERSION_random	haskell-cloud/dist/build/autogen/cabal_macros.h	67;"	d
 VERSION_random	spark-mr/dist/build/eta-0.7.1.3/spark-mr-0.1.0.0/x/spark-mr/build/spark-mr/autogen/cabal_macros.h	49;"	d
 VERSION_spark_mr	spark-mr/dist/build/eta-0.7.1.3/spark-mr-0.1.0.0/x/spark-mr/build/spark-mr/autogen/cabal_macros.h	5;"	d
+__init__	SLIC.py	/^    def __init__(self, img, step, nc):$/;"	m	class:SLIC
+_convertToLAB	SLIC.py	/^    def _convertToLAB(self):$/;"	m	class:SLIC
+_findLocalMinimum	SLIC.py	/^    def _findLocalMinimum(self, center):$/;"	m	class:SLIC
+_initData	SLIC.py	/^    def _initData(self):$/;"	m	class:SLIC
+_rgb2lab	SLIC.py	/^    def _rgb2lab ( self, inputColor ) :$/;"	m	class:SLIC
+createConnectivity	SLIC.py	/^    def createConnectivity(self):$/;"	m	class:SLIC
+displayContours	SLIC.py	/^    def displayContours(self, color):$/;"	m	class:SLIC
+generateSuperPixels	SLIC.py	/^    def generateSuperPixels(self):$/;"	m	class:SLIC
+img	SLIC.py	/^img = cv2.imread(sys.argv[1])$/;"	v
+nc	SLIC.py	/^nc = int(sys.argv[3])$/;"	v
+nr_superpixels	SLIC.py	/^nr_superpixels = int(sys.argv[2])$/;"	v
+slic	SLIC.py	/^slic = SLIC(img, step, nc)$/;"	v
+step	SLIC.py	/^step = int((img.shape[0]*img.shape[1]\/nr_superpixels)**0.5)$/;"	v
