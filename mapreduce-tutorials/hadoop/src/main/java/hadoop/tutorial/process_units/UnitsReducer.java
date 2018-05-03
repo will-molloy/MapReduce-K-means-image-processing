@@ -19,8 +19,7 @@ public class UnitsReducer extends MapReduceBase implements Reducer<Text, DoubleW
                        Reporter reporter) throws IOException {
 
         while (values.hasNext()) {
-            double val = values.next().get();
-            output.collect(key, new DoubleWritable(val));
+            output.collect(key, new DoubleWritable(values.next().get()));
         }
     }
 }
