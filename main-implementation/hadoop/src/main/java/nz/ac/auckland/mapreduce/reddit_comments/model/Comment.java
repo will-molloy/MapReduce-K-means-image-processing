@@ -2,17 +2,17 @@ package nz.ac.auckland.mapreduce.reddit_comments.model;
 
 public class Comment {
 
-    private final int ups;
+    private final int votes;
 
     private final String subReddit;
 
-    public Comment(int ups, String subReddit) {
-        this.ups = ups;
+    public Comment(int votes, String subReddit) {
+        this.votes = votes;
         this.subReddit = subReddit;
     }
 
-    public int getUps() {
-        return ups;
+    public int getVotes() {
+        return votes;
     }
 
     public String getSubReddit() {
@@ -22,7 +22,7 @@ public class Comment {
     @Override
     public String toString() {
         return "Comment{" +
-                "ups=" + ups +
+                "votes=" + votes +
                 ", subReddit='" + subReddit + '\'' +
                 '}';
     }
