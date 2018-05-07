@@ -15,7 +15,15 @@ object SparkRedditMr {
 
     val dataframe = ss.read.json(inputFile).cache()
 
+    val timeStart = System.currentTimeMillis()
+
     dataframe.groupBy($"subreddit").avg("score").show(999)
+
+    val timeFin = System.currentTimeMillis()
+
+    val timeDiff = timeFin - timeStart
+
+    println(timeDiff)
 
   }
 }

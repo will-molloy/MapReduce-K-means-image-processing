@@ -1,0 +1,43 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+Comment	main-implementation/hadoop/src/main/java/nz/ac/auckland/mapreduce/reddit_comments/model/Comment.java	/^    public Comment(int ups, String subReddit) {$/;"	m	class:Comment
+Comment	main-implementation/hadoop/src/main/java/nz/ac/auckland/mapreduce/reddit_comments/model/Comment.java	/^public class Comment {$/;"	c
+Main	main-implementation/hadoop/src/main/java/nz/ac/auckland/mapreduce/reddit_comments/Main.java	/^public class Main {$/;"	c
+ProcessUnits	mapreduce-tutorials/hadoop/src/main/java/hadoop/process_units/ProcessUnits.java	/^public class ProcessUnits {$/;"	c
+RedditCommentsMapper	main-implementation/hadoop/src/main/java/nz/ac/auckland/mapreduce/reddit_comments/RedditCommentsMapper.java	/^public class RedditCommentsMapper extends Mapper<LongWritable, Text, Text, IntWritable> {$/;"	c
+RedditCommentsReducer	main-implementation/hadoop/src/main/java/nz/ac/auckland/mapreduce/reddit_comments/RedditCommentsReducer.java	/^public class RedditCommentsReducer extends Reducer<Text, IntWritable, Text, DoubleWritable> {$/;"	c
+UnitsMapper	mapreduce-tutorials/hadoop/src/main/java/hadoop/process_units/UnitsMapper.java	/^public class UnitsMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, DoubleWritable> {$/;"	c
+UnitsReducer	mapreduce-tutorials/hadoop/src/main/java/hadoop/process_units/UnitsReducer.java	/^public class UnitsReducer extends MapReduceBase implements Reducer<Text, DoubleWritable, Text, DoubleWritable> {$/;"	c
+WordCount	mapreduce-tutorials/hadoop/src/main/java/hadoop/word_count/WordCount.java	/^public class WordCount {$/;"	c
+WordCountMapper	mapreduce-tutorials/hadoop/src/main/java/hadoop/word_count/WordCountMapper.java	/^public class WordCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {$/;"	c
+WordCountReducer	mapreduce-tutorials/hadoop/src/main/java/hadoop/word_count/WordCountReducer.java	/^public class WordCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {$/;"	c
+getSubReddit	main-implementation/hadoop/src/main/java/nz/ac/auckland/mapreduce/reddit_comments/model/Comment.java	/^    public String getSubReddit() {$/;"	m	class:Comment
+getUps	main-implementation/hadoop/src/main/java/nz/ac/auckland/mapreduce/reddit_comments/model/Comment.java	/^    public int getUps() {$/;"	m	class:Comment
+hadoop.process_units	mapreduce-tutorials/hadoop/src/main/java/hadoop/process_units/ProcessUnits.java	/^package hadoop.process_units;$/;"	p
+hadoop.process_units	mapreduce-tutorials/hadoop/src/main/java/hadoop/process_units/UnitsMapper.java	/^package hadoop.process_units;$/;"	p
+hadoop.process_units	mapreduce-tutorials/hadoop/src/main/java/hadoop/process_units/UnitsReducer.java	/^package hadoop.process_units;$/;"	p
+hadoop.word_count	mapreduce-tutorials/hadoop/src/main/java/hadoop/word_count/WordCount.java	/^package hadoop.word_count;$/;"	p
+hadoop.word_count	mapreduce-tutorials/hadoop/src/main/java/hadoop/word_count/WordCountMapper.java	/^package hadoop.word_count;$/;"	p
+hadoop.word_count	mapreduce-tutorials/hadoop/src/main/java/hadoop/word_count/WordCountReducer.java	/^package hadoop.word_count;$/;"	p
+main	main-implementation/hadoop/src/main/java/nz/ac/auckland/mapreduce/reddit_comments/Main.java	/^    public static void main(String... args) throws Exception {$/;"	m	class:Main
+main	mapreduce-tutorials/hadoop/src/main/java/hadoop/process_units/ProcessUnits.java	/^    public static void main(String... args) throws Exception {$/;"	m	class:ProcessUnits
+main	mapreduce-tutorials/hadoop/src/main/java/hadoop/word_count/WordCount.java	/^    public static void main(String... args) throws Exception {$/;"	m	class:WordCount
+map	main-implementation/hadoop/src/main/java/nz/ac/auckland/mapreduce/reddit_comments/RedditCommentsMapper.java	/^    public void map(LongWritable key, Text value, Context context) {$/;"	m	class:RedditCommentsMapper
+map	mapreduce-tutorials/hadoop/src/main/java/hadoop/process_units/UnitsMapper.java	/^    public void map(LongWritable key,$/;"	m	class:UnitsMapper
+map	mapreduce-tutorials/hadoop/src/main/java/hadoop/word_count/WordCountMapper.java	/^    public void map(LongWritable key, Text value, Context context) {$/;"	m	class:WordCountMapper
+nz.ac.auckland.mapreduce.reddit_comments	main-implementation/hadoop/src/main/java/nz/ac/auckland/mapreduce/reddit_comments/Main.java	/^package nz.ac.auckland.mapreduce.reddit_comments;$/;"	p
+nz.ac.auckland.mapreduce.reddit_comments	main-implementation/hadoop/src/main/java/nz/ac/auckland/mapreduce/reddit_comments/RedditCommentsMapper.java	/^package nz.ac.auckland.mapreduce.reddit_comments;$/;"	p
+nz.ac.auckland.mapreduce.reddit_comments	main-implementation/hadoop/src/main/java/nz/ac/auckland/mapreduce/reddit_comments/RedditCommentsReducer.java	/^package nz.ac.auckland.mapreduce.reddit_comments;$/;"	p
+nz.ac.auckland.mapreduce.reddit_comments.model	main-implementation/hadoop/src/main/java/nz/ac/auckland/mapreduce/reddit_comments/model/Comment.java	/^package nz.ac.auckland.mapreduce.reddit_comments.model;$/;"	p
+reduce	main-implementation/hadoop/src/main/java/nz/ac/auckland/mapreduce/reddit_comments/RedditCommentsReducer.java	/^    public void reduce(Text word, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {$/;"	m	class:RedditCommentsReducer
+reduce	mapreduce-tutorials/hadoop/src/main/java/hadoop/process_units/UnitsReducer.java	/^    public void reduce(Text key,$/;"	m	class:UnitsReducer
+reduce	mapreduce-tutorials/hadoop/src/main/java/hadoop/word_count/WordCountReducer.java	/^    public void reduce(Text word, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {$/;"	m	class:WordCountReducer
+subReddit	main-implementation/hadoop/src/main/java/nz/ac/auckland/mapreduce/reddit_comments/model/Comment.java	/^    private final String subReddit;$/;"	f	class:Comment	file:
+toList	main-implementation/hadoop/src/main/java/nz/ac/auckland/mapreduce/reddit_comments/RedditCommentsReducer.java	/^    private ImmutableList<Integer> toList(Iterable<IntWritable> iterable){$/;"	m	class:RedditCommentsReducer	file:
+toRedditComment	main-implementation/hadoop/src/main/java/nz/ac/auckland/mapreduce/reddit_comments/RedditCommentsMapper.java	/^    private Comment toRedditComment(String jsonLine) {$/;"	m	class:RedditCommentsMapper	file:
+toString	main-implementation/hadoop/src/main/java/nz/ac/auckland/mapreduce/reddit_comments/model/Comment.java	/^    public String toString() {$/;"	m	class:Comment
+ups	main-implementation/hadoop/src/main/java/nz/ac/auckland/mapreduce/reddit_comments/model/Comment.java	/^    private final int ups;$/;"	f	class:Comment	file:
