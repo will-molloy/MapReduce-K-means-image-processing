@@ -13,6 +13,10 @@ import org.apache.hadoop.util.GenericOptionsParser;
 
 public class Main {
 
+    /**
+     * Run:
+     * hadoop jar hadoop.jar nz.ac.auckland.mapreduce.reddit_comments.Main input_dir output_dir
+     */
     public static void main(String... args) throws Exception {
         Configuration configuration = new Configuration();
         String[] files = new GenericOptionsParser(configuration, args).getRemainingArgs();
@@ -21,8 +25,8 @@ public class Main {
 
         Job job = new Job(configuration, "se751_group9_map_reduce_hadoop");
         job.setJarByClass(Main.class);
-        job.setMapperClass(MyMapper.class);
-        job.setReducerClass(MyReducer.class);
+        job.setMapperClass(RedditCommentsMapper.class);
+        job.setReducerClass(RedditCommentsReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
 
