@@ -1,4 +1,4 @@
-package hadoop.tutorial.word_count;
+package hadoop.word_count;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;

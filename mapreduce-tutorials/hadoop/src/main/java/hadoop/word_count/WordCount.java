@@ -1,4 +1,4 @@
-package hadoop.tutorial.word_count;
+package hadoop.word_count;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -15,7 +15,7 @@ public class WordCount {
     /**
      * input and output directories in resources dir.
      * Build jar and run:
-     * hadoop jar hadoop.jar hadoop.tutorial.word_count.WordCount input_dir output_dir
+     * hadoop jar hadoop.jar hadoop.word_count.WordCount input_dir output_dir
      */
     public static void main(String... args) throws Exception {
         Configuration configuration = new Configuration();

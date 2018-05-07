@@ -1,4 +1,4 @@
-package hadoop.tutorial.process_units;
+package hadoop.process_units;
 
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;

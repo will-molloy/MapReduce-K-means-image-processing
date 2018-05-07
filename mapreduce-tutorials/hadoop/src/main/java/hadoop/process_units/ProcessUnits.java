@@ -1,4 +1,4 @@
-package hadoop.tutorial.process_units;
+package hadoop.process_units;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -11,7 +11,7 @@ public class ProcessUnits {
     /**
      * input and output directories in resources dir.
      * Build jar and run:
-     * hadoop jar hadoop.jar hadoop.tutorial.process_units.ProcessUnits input_dir output_dir
+     * hadoop jar hadoop.jar hadoop.process_units.ProcessUnits input_dir output_dir
      */
     public static void main(String... args) throws Exception {
         JobConf conf = new JobConf(ProcessUnits.class);
