@@ -1,4 +1,4 @@
-package nz.ac.auckland.map_reduce;
+package hadoop.word_count;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -10,12 +10,12 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
-public class Main {
+public class WordCount {
 
     /**
      * input and output directories in resources dir.
      * Build jar and run:
-     * hadoop jar hadoop.jar nz.ac.auckland.map_reduce.Main input_dir output_dir
+     * hadoop jar hadoop.jar hadoop.word_count.WordCount input_dir output_dir
      */
     public static void main(String... args) throws Exception {
         Configuration configuration = new Configuration();
@@ -23,10 +23,10 @@ public class Main {
         Path input = new Path(files[0]);
         Path output = new Path(files[1]);
 
-        Job job = new Job(configuration, "se751_group9_map_reduce");
-        job.setJarByClass(Main.class);
-        job.setMapperClass(MyMapper.class);
-        job.setReducerClass(MyReducer.class);
+        Job job = new Job(configuration, "word_count");
+        job.setJarByClass(WordCount.class);
+        job.setMapperClass(WordCountMapper.class);
+        job.setReducerClass(WordCountReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
 
