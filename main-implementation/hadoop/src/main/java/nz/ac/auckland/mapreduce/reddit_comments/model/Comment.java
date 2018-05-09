@@ -2,28 +2,28 @@ package nz.ac.auckland.mapreduce.reddit_comments.model;
 
 public class Comment {
 
-    private final int votes;
+    private final int score;
 
     private final String subReddit;
 
-    public Comment(int votes, String subReddit) {
-        this.votes = votes;
-        this.subReddit = subReddit;
+    private final int gilded;
+
+    public Comment(int score, String subReddit, int gilded) {
+        this.score = score;
+        this.subReddit = subReddit.toLowerCase();
+        this.gilded = gilded;
     }
 
-    public int getVotes() {
-        return votes;
+    public int getScore() {
+        return score;
     }
 
     public String getSubReddit() {
         return subReddit;
     }
 
-    @Override
-    public String toString() {
-        return "Comment{" +
-                "votes=" + votes +
-                ", subReddit='" + subReddit + '\'' +
-                '}';
+    public boolean isGilded() {
+        return gilded > 0;
     }
+
 }
