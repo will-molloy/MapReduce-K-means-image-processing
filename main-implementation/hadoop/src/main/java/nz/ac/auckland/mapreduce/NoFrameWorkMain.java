@@ -9,7 +9,10 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.GenericOptionsParser;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class NoFrameWorkMain {
@@ -63,8 +66,8 @@ public class NoFrameWorkMain {
     private static double mean(ImmutableList<Integer> list) {
         return list.stream()
                 .mapToDouble(Integer::doubleValue)
-                .sum()
-                / list.size();
+                .average()
+                .orElse(0);
     }
 
     private static void writeToOutput(ImmutableList<String> resultPairs, Path output) throws IOException {

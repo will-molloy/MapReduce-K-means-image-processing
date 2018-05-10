@@ -18,7 +18,7 @@ public class HadoopMain {
 
     /**
      * Run:
-     * hadoop jar hadoop.jar nz.ac.auckland.mapreduce.reddit_comments.HadoopMain input_dir output_dir
+     * hadoop jar hadoop.jar nz.ac.auckland.mapreduce.hadoop.HadoopMain input_dir output_dir
      */
     public static void main(String... args) throws Exception {
         long start = System.currentTimeMillis();
