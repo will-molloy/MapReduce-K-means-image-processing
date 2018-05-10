@@ -1,4 +1,4 @@
-package nz.ac.auckland.mapreduce.reddit_comments;
+package nz.ac.auckland.mapreduce.hadoop;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -12,13 +12,13 @@ import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.log4j.Logger;
 
 
-public class Main {
+public class HadoopMain {
 
-    private static final Logger log = Logger.getLogger(Main.class);
+    private static final Logger log = Logger.getLogger(HadoopMain.class);
 
     /**
      * Run:
-     * hadoop jar hadoop.jar nz.ac.auckland.mapreduce.reddit_comments.Main input_dir output_dir
+     * hadoop jar hadoop.jar nz.ac.auckland.mapreduce.reddit_comments.HadoopMain input_dir output_dir
      */
     public static void main(String... args) throws Exception {
         long start = System.currentTimeMillis();
@@ -28,7 +28,7 @@ public class Main {
         Path output = new Path(files[1]);
 
         Job job = new Job(configuration, "se751_group9_hadoop");
-        job.setJarByClass(Main.class);
+        job.setJarByClass(HadoopMain.class);
         job.setMapperClass(RedditCommentsMapper.class);
         job.setReducerClass(RedditCommentsReducer.class);
         job.setOutputKeyClass(Text.class);

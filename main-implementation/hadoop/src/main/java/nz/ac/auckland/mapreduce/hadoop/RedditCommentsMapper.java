@@ -1,8 +1,6 @@
-package nz.ac.auckland.mapreduce.reddit_comments;
+package nz.ac.auckland.mapreduce.hadoop;
 
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import nz.ac.auckland.mapreduce.reddit_comments.model.Comment;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -10,7 +8,6 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
-import java.util.function.Function;
 
 import static java.util.Arrays.stream;
 
@@ -26,24 +23,16 @@ public class RedditCommentsMapper extends Mapper<LongWritable, Text, Text, IntWr
     public void map(LongWritable key, Text value, Context context) {
         stream(value.toString()
                 .split("\n"))
-                .map(toRedditComment)
+                .map(string -> new JsonParser().parse(string).getAsJsonObject())
                 .forEach(comment -> {
                     try {
-                        context.write(new Text(comment.getSubReddit()),
-                                new IntWritable(comment.getScore()));
+                        context.write(
+                                new Text(comment.get("subreddit").getAsString().toLowerCase()),
+                                new IntWritable(comment.get("score").getAsInt()));
                     } catch (IOException | InterruptedException e) {
                         log.error("Mapper failed.", e);
                     }
                 });
     }
-
-    private Function<String, Comment> toRedditComment = (jsonLine) -> {
-        JsonParser parser = new JsonParser();
-        JsonObject commentData = parser.parse(jsonLine).getAsJsonObject();
-        return new Comment(
-                commentData.get("score").getAsInt(),
-                commentData.get("subreddit").getAsString(),
-                commentData.get("gilded").getAsInt());
-    };
 
 }

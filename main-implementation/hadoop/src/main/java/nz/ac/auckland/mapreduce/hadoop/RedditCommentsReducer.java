@@ -1,4 +1,4 @@
-package nz.ac.auckland.mapreduce.reddit_comments;
+package nz.ac.auckland.mapreduce.hadoop;
 
 import com.google.common.collect.ImmutableList;
 import org.apache.hadoop.io.DoubleWritable;
@@ -7,9 +7,6 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
-import java.util.function.Function;
-
-import static java.util.stream.StreamSupport.stream;
 
 public class RedditCommentsReducer extends Reducer<Text, IntWritable, Text, DoubleWritable> {
 
@@ -18,17 +15,12 @@ public class RedditCommentsReducer extends Reducer<Text, IntWritable, Text, Doub
      */
     @Override
     public void reduce(Text word, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
-        ImmutableList<Integer> list = toList.apply(values);
+        ImmutableList<IntWritable> list = ImmutableList.copyOf(values);
         double mean = list.stream()
-                .mapToDouble(Integer::doubleValue)
+                .mapToDouble(v -> (double)v.get())
                 .sum()
-                / list.size();
+                / (list.size() * 1.0);
         context.write(word, new DoubleWritable(mean));
     }
-
-    private Function<Iterable<IntWritable>, ImmutableList<Integer>> toList = (iterable) ->
-            ImmutableList.copyOf(stream(iterable.spliterator(), false)
-                    .mapToInt(IntWritable::get)
-                    .iterator());
 
 }
