@@ -1,5 +1,5 @@
 {-# LANGUAGE TupleSections, DeriveGeneric, OverloadedStrings #-}
-module CountWords 
+module Reddit
   ( Document
   , distMR
   , __remoteTable
@@ -40,4 +40,3 @@ remotable ['redditMR_]
 
 distMR :: [NodeId] -> Map FilePath Document -> Process (Map String Score)
 distMR = distrMapReduce ($(mkClosure 'redditMR_) ()) 
-  
