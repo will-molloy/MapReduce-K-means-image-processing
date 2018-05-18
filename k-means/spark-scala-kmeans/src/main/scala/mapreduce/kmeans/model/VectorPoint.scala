@@ -1,10 +1,10 @@
 package mapreduce.kmeans.model
 
-sealed case class VectorPoint(len: Int, private val fromList: List[Double]) {
+sealed case class VectorPoint(len: Int, private val fromList: List[Float]) {
 
   def +(that: VectorPoint) = VectorPoint(this.fromList.zip(that.fromList).map { case (x, y) => x + y })
 
-  def /(that: Double) = VectorPoint(this.fromList.map { x => x / that })
+  def /(that: Float) = VectorPoint(this.fromList.map { x => x / that })
 
   /**
     * Magnitude of the point
@@ -19,19 +19,17 @@ sealed case class VectorPoint(len: Int, private val fromList: List[Double]) {
   /**
     * The euclidean distance between the two points
     */
-  def ><(that: VectorPoint): Double = !(this - that)
+  def ><(that: VectorPoint): Float = !(this - that)
 
   def -(that: VectorPoint) = VectorPoint(this.fromList.zip(that.fromList).map { case (x, y) => x - y })
 
-  def unary_!(): Double = math.sqrt(this.fromList.map { x => x * x }.sum)
+  def unary_!(): Float = math.sqrt(this.fromList.map { x => x * x }.sum) toFloat
 
   override def toString: String = fromList.toString()
 }
 
 object VectorPoint {
-  def apply(list: List[Double]): VectorPoint = this (list.length, list)
+  def apply(list: List[Float]): VectorPoint = this (list.length, list)
 
-  def apply(arr: Array[Double]): VectorPoint = this (arr.length, arr toList)
-
-  def apply(arr: Array[Float]): VectorPoint = this (arr.length, (arr toList) map (x => x toDouble))
+  def apply(arr: Array[Float]): VectorPoint = this (arr.length, arr toList)
 }

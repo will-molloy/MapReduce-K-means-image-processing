@@ -3,11 +3,14 @@ package mapreduce.kmeans.service
 import mapreduce.kmeans.model.VectorPoint
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
+import org.slf4j.LoggerFactory
 
 /**
   * MapReduce KMeans implementation.
   */
 class MapReduceKMeans(val context: SparkContext) extends KMeans {
+
+  private val log = LoggerFactory.getLogger(classOf[MapReduceKMeans])
 
   override def kMeans(points: Array[VectorPoint], kClusters: Int, delta: Double): Seq[VectorPoint] = {
     val rddData = context.parallelize(points).cache()
@@ -20,7 +23,7 @@ class MapReduceKMeans(val context: SparkContext) extends KMeans {
     */
   private def initCentroids(data: Array[VectorPoint], kClusters: Int): Array[VectorPoint] = {
     val len = data length
-    val newCentroids = (Array tabulate kClusters) { _ => VectorPoint((Array fill len) (0.0)) } // init with origin
+    val newCentroids = (Array tabulate kClusters) { _ => VectorPoint((Array fill len) (0f)) } // init with origin
     val lengthBuffer = new Array[Double](len)
 
     for (n <- 1 until kClusters) {
@@ -73,7 +76,7 @@ class MapReduceKMeans(val context: SparkContext) extends KMeans {
 
     // Calculate the distance between the centroids old and new
     val currentDelta = (centroids zip newCentroids) map { case (a, b) => a >< b }
-    System.err.println("Centroids changed.")
+    log.info("Centroids changed.")
 
     // Determine if the centroids have converged, otherwise repeat
     if (currentDelta exists (_ > delta))

@@ -2,18 +2,24 @@ package mapreduce.kmeans.service
 
 import java.awt.Color
 import java.awt.image.BufferedImage
+import java.util.concurrent.atomic.AtomicLong
 
 import mapreduce.kmeans.model.VectorPoint
 import org.apache.spark.rdd.RDD
-
-import scala.collection.mutable.ListBuffer
+import org.slf4j.LoggerFactory
 
 class KMeansImageProcessor(val kMeans: KMeans) {
 
   private val delta = 0.001
 
+  private val log = LoggerFactory.getLogger(classOf[KMeansImageProcessor])
+
+  private val count = new AtomicLong(0)
+
+  /**
+    * Process images in place.
+    */
   def process(images: List[BufferedImage], kClusters: Int): List[BufferedImage] = {
-    val processedImages = new ListBuffer[BufferedImage]
     images.foreach(image => {
       val width = image getWidth
       val height = image getHeight
@@ -37,13 +43,13 @@ class KMeansImageProcessor(val kMeans: KMeans) {
         val near = (imageData apply a) ?? resultCentroids
         near match {
           case VectorPoint(_, list) =>
-            val newPixel = Color.HSBtoRGB(list(0) toFloat, list(1) toFloat, list(2) toFloat)
+            val newPixel = Color.HSBtoRGB(list(0), list(1), list(2))
             image.setRGB(a / height, a % height, newPixel)
         }
       }
-      processedImages += image
+      log.info("Images processed: " + count.incrementAndGet())
     })
-    processedImages.toList
+    images
   }
 
 }

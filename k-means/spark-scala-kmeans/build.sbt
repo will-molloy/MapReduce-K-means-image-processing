@@ -11,3 +11,5 @@ libraryDependencies += "org.apache.spark" %% "spark-sql" % "2.3.0"
 libraryDependencies += "io.humble" % "humble-video-all" % "0.2.1"
 // https://mvnrepository.com/artifact/org.bytedeco/javacv
 libraryDependencies += "org.bytedeco" % "javacv" % "1.4.1"
+// https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25"
