@@ -1,55 +1,61 @@
+package mapreduce.kmeans.service
+
 import java.awt.Color
 import java.awt.image.BufferedImage
 
+import mapreduce.kmeans.model.PointColour
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 
-class KMeansMapReduceImageProcessor(val context: SparkContext, val kPoints: Int, val image: BufferedImage) {
+class KMeansMapReduceImageProcessor(val context: SparkContext, val kClusters: Int, val delta: Double) {
 
-  private val delta = 0.001
+  def process(image: BufferedImage): BufferedImage = {
+    val width = image getWidth
+    val height = image getHeight
 
-  def processImage(): BufferedImage = {
-    val width = image.getWidth
-    val height = image.getHeight
-
-    // Persist into RDD
-    val imageData = Array.tabulate[PointColourF](width * height)(i => {
-      val pixel = image.getRGB(i / height, i % height)
+    // Read image data to HSB
+    val imageData = (Array tabulate[PointColour] width * height)(i => {
+      val pixel = image getRGB(i / height, i % height)
       val r = (pixel >> 16) & 0xff
       val g = (pixel >> 8) & 0xff
       val b = pixel & 0xff
       val arr = new Array[Float](3)
       Color.RGBtoHSB(r, g, b, arr)
-      PointColourF(arr.apply(0), arr.apply(1), arr.apply(2))
-    }
-    )
-    val rddData = context.parallelize(imageData).cache()
+      PointColour(arr apply 0, arr apply 1, arr apply 2)
+    })
 
-    // Process image via KMeans
-    val centroids = initCentroids(imageData)
-    kMeansIterate(rddData, centroids)
+    // Process image
+    val resultCentroids = kMeans(imageData)
 
-    // Update image
+    // Update and return image
     for (a <- 0 until height * width) {
-      val near = imageData.apply(a) ?? centroids
+      val near = (imageData apply a) ?? resultCentroids
       near match {
-        case PointColourF(h, s, b) =>
-          val pixel = Color.HSBtoRGB(h.asInstanceOf[Float], s.asInstanceOf[Float], b.asInstanceOf[Float])
-          image.setRGB(a / height, a % height, pixel)
+        case PointColour(h, s, b) =>
+          val newPixel = Color.HSBtoRGB(h.asInstanceOf[Float], s.asInstanceOf[Float], b.asInstanceOf[Float])
+          image setRGB(a / height, a % height, newPixel)
       }
     }
     image
   }
 
-  // KMeans++ implementation
-  private def initCentroids(data: Array[PointColourF]): Array[PointColourF] = {
+  private def kMeans(points: Array[PointColour]): Seq[PointColour] = {
+    val rddData = context.parallelize(points).cache()
+    val seedCentroids = initCentroids(points)
+    kMeansIterate(rddData, seedCentroids)
+  }
+
+  /**
+    * KMeans++ implementation, seed the initial centroids.
+    */
+  private def initCentroids(data: Array[PointColour]): Array[PointColour] = {
     val len = data.length
-    val newCent = Array.tabulate(kPoints) { _ => PointColourF.origin() }
+    val newCentroids = Array.tabulate(kClusters) { _ => PointColour.origin() }
     val lengthBuffer = new Array[Double](len)
-    for (n <- 1 until kPoints) {
+    for (n <- 1 until kClusters) {
       var sum = 0.0
       for (m <- 0 until len) {
-        lengthBuffer(m) = (data(m) ?? newCent) >< data(m)
+        lengthBuffer(m) = (data(m) ?? newCentroids) >< data(m)
         sum += lengthBuffer(m)
       }
       sum *= math.random
@@ -58,19 +64,20 @@ class KMeansMapReduceImageProcessor(val context: SparkContext, val kPoints: Int,
         for (m <- 0 until len) {
           sum -= lengthBuffer(m)
           if (sum < 0f) {
-            newCent(n) = data(m)
+            newCentroids(n) = data(m)
             return
           }
         }
       }
-
       f()
     }
-    newCent
+    newCentroids
   }
 
-  // MapReduce KMeans implementation
-  private def kMeansIterate(points: RDD[PointColourF], centroids: Seq[PointColourF]): Unit = {
+  /**
+    * MapReduce KMeans implementation. Iterate given points until centroids converge.
+    */
+  private def kMeansIterate(points: RDD[PointColour], centroids: Seq[PointColour]): Seq[PointColour] = {
     val clusters = points
       // Mapping stage, for each point, find closest centroid.
       // Intermediate key: [closest mean, (point , 1)].
@@ -94,11 +101,13 @@ class KMeansMapReduceImageProcessor(val context: SparkContext, val kPoints: Int,
 
     // Calculate the distance between the centroids old and new
     val delta = (centroids zip newCentroids).map { case (a, b) => a >< b }
-    System.err.println("Centroids changed")
+    System.err.println("Centroids changed.")
 
     // Determine if the centroids have converged, otherwise repeat
     if (delta.exists(_ > this.delta))
       kMeansIterate(points, newCentroids)
+    else
+      newCentroids
   }
 
 }

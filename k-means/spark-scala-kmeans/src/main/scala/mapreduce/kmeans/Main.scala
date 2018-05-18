@@ -1,6 +1,9 @@
+package mapreduce.kmeans
+
 import java.io.File
 
 import javax.imageio.ImageIO
+import mapreduce.kmeans.service.KMeansMapReduceImageProcessor
 import org.apache.spark._
 
 object Main {
@@ -11,7 +14,7 @@ object Main {
       System.exit(-1)
     }
     val pointsFile = args(0)
-    val k = args(1) toInt
+    val kClusters = args(1) toInt
 
     val config = new SparkConf()
       .setMaster("local[2]")
@@ -19,10 +22,9 @@ object Main {
     val context = new SparkContext(config)
 
     val image = ImageIO.read(new File(pointsFile))
-    new KMeansMapReduceImageProcessor(context, k, image).processImage()
+    new KMeansMapReduceImageProcessor(context, kClusters, 0.001).process(image)
 
-    val f = new File("out.png")
-    ImageIO.write(image, "png", f)
+    ImageIO.write(image, "png", new File("out.png"))
   }
 
 }

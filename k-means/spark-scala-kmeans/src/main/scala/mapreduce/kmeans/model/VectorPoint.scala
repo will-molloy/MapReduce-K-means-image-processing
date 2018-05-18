@@ -1,3 +1,5 @@
+package mapreduce.kmeans.model
+
 sealed case class VectorPoint(len: Integer, private val fromList: List[Double]) {
 
   def +(that: VectorPoint) = VectorPoint(this.fromList.zip(that.fromList).map { case (x, y) => x + y })
