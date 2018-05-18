@@ -4,11 +4,7 @@ sealed case class VectorPoint(len: Int, private val fromList: List[Double]) {
 
   def +(that: VectorPoint) = VectorPoint(this.fromList.zip(that.fromList).map { case (x, y) => x + y })
 
-  def -(that: VectorPoint) = VectorPoint(this.fromList.zip(that.fromList).map { case (x, y) => x - y })
-
   def /(that: Double) = VectorPoint(this.fromList.map { x => x / that })
-
-  def unary_!(): Double = math.sqrt(this.fromList.map { x => x * x }.sum)
 
   /**
     * Magnitude of the point
@@ -25,6 +21,10 @@ sealed case class VectorPoint(len: Int, private val fromList: List[Double]) {
     */
   def ><(that: VectorPoint): Double = !(this - that)
 
+  def -(that: VectorPoint) = VectorPoint(this.fromList.zip(that.fromList).map { case (x, y) => x - y })
+
+  def unary_!(): Double = math.sqrt(this.fromList.map { x => x * x }.sum)
+
   override def toString: String = fromList.toString()
 }
 
@@ -33,5 +33,5 @@ object VectorPoint {
 
   def apply(arr: Array[Double]): VectorPoint = this (arr.length, arr toList)
 
-  def apply(arr: Array[Float]): VectorPoint = this (arr.length, (arr toList) map(x => x toDouble))
+  def apply(arr: Array[Float]): VectorPoint = this (arr.length, (arr toList) map (x => x toDouble))
 }

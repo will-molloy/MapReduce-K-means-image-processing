@@ -20,7 +20,7 @@ class MapReduceKMeans(val context: SparkContext) extends KMeans {
     */
   private def initCentroids(data: Array[VectorPoint], kClusters: Int): Array[VectorPoint] = {
     val len = data length
-    val newCentroids = (Array tabulate kClusters) { _ => VectorPoint((Array fill len)(0.0)) } // init with origin
+    val newCentroids = (Array tabulate kClusters) { _ => VectorPoint((Array fill len) (0.0)) } // init with origin
     val lengthBuffer = new Array[Double](len)
 
     for (n <- 1 until kClusters) {
@@ -40,6 +40,7 @@ class MapReduceKMeans(val context: SparkContext) extends KMeans {
           }
         }
       }
+
       f()
     }
     newCentroids
@@ -63,7 +64,7 @@ class MapReduceKMeans(val context: SparkContext) extends KMeans {
       }
 
     // Extract new centroids
-    val newCentroids = centroids map(oldCentroid => {
+    val newCentroids = centroids map (oldCentroid => {
       clusters.get(oldCentroid) match {
         case Some(newCentroid) => newCentroid
         case None => oldCentroid
@@ -75,7 +76,7 @@ class MapReduceKMeans(val context: SparkContext) extends KMeans {
     System.err.println("Centroids changed.")
 
     // Determine if the centroids have converged, otherwise repeat
-    if (currentDelta exists(_ > delta))
+    if (currentDelta exists (_ > delta))
       kMeansIterate(points, newCentroids, delta)
     else
       newCentroids

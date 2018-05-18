@@ -1,4 +1,4 @@
-package mapreduce.kmeans.service
+package mapreduce.kmeans.util
 
 import java.io.BufferedWriter
 import java.util.concurrent.atomic.AtomicInteger
@@ -8,14 +8,14 @@ import mapreduce.kmeans.model.VectorPoint
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
-class ClusterWriter(val writer: BufferedWriter) {
+object ClusterWriter {
 
   private val atom: AtomicInteger = new AtomicInteger(0)
 
   /**
     * Method to print the clusters for plotting
     */
-  def printClusters(centroids: Seq[VectorPoint], points: Seq[VectorPoint]): Unit = {
+  def write(writer: BufferedWriter, centroids: Seq[VectorPoint], points: Seq[VectorPoint]): Unit = {
     val dict = new mutable.HashMap[VectorPoint, ArrayBuffer[VectorPoint]]()
     centroids.foreach { e =>
       dict.put(e, new ArrayBuffer[VectorPoint]())
@@ -25,9 +25,9 @@ class ClusterWriter(val writer: BufferedWriter) {
       a.get += e
     }
 
-    def writeSeq(a : Seq[Any]): Unit = {
+    def writeSeq(a: Seq[Any]): Unit = {
       writer.write("[")
-      for ((i,n) <- a.zip(0 to a.size)) {
+      for ((i, n) <- a.zip(0 to a.size)) {
         writer.write(i.toString)
         if (n != a.size - 1) {
           writer.write(",")
