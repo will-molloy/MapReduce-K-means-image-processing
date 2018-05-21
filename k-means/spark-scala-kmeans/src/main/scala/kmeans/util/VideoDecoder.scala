@@ -1,15 +1,16 @@
-package mapreduce.kmeans.util
+package kmeans.util
 
 import java.awt.image.BufferedImage
 
 import io.humble.video._
 import io.humble.video.awt.MediaPictureConverterFactory
+import org.apache.spark.internal.Logging
 
 import scala.collection.mutable.ListBuffer
 
-object VideoDecoder {
+object VideoDecoder extends Logging {
 
-  def toImageList(inVideoFilePath: String): List[BufferedImage] = {
+  def decode(inVideoFilePath: String, maxFrames: Int): Seq[BufferedImage] = {
     val demuxer = Demuxer.make()
     demuxer.open(inVideoFilePath, null, false, true, null, null)
 
@@ -34,7 +35,7 @@ object VideoDecoder {
     val converter = MediaPictureConverterFactory.createConverter(MediaPictureConverterFactory.HUMBLE_BGR_24, picture)
 
     val packet = MediaPacket.make()
-    while (demuxer.read(packet) >= 0) {
+    while (demuxer.read(packet) >= 0 && images.length < maxFrames) {
       if (packet.getStreamIndex == videoStreamId) {
         var offset = 0
         var bytesRead = 0
@@ -48,6 +49,7 @@ object VideoDecoder {
       }
     }
     demuxer.close()
+    log.info("Decoded video: %s" format inVideoFilePath)
     images.toList
   }
 

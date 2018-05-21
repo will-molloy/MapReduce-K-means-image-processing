@@ -1,9 +1,9 @@
-package mapreduce.kmeans.util
+package kmeans.util
 
 import java.io.BufferedWriter
 import java.util.concurrent.atomic.AtomicInteger
 
-import mapreduce.kmeans.model.VectorPoint
+import kmeans.model.PointColour
 
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
@@ -15,13 +15,13 @@ object ClusterWriter {
   /**
     * Method to print the clusters for plotting
     */
-  def write(writer: BufferedWriter, centroids: Seq[VectorPoint], points: Seq[VectorPoint]): Unit = {
-    val dict = new mutable.HashMap[VectorPoint, ArrayBuffer[VectorPoint]]()
+  def write(writer: BufferedWriter, centroids: Seq[PointColour], points: Seq[PointColour]): Unit = {
+    val dict = new mutable.HashMap[PointColour, ArrayBuffer[PointColour]]()
     centroids.foreach { e =>
-      dict.put(e, new ArrayBuffer[VectorPoint]())
+      dict.put(e, new ArrayBuffer[PointColour]())
     }
     points.foreach { e =>
-      val a = dict.get(e ?? centroids)
+      val a = dict.get(e closest centroids)
       a.get += e
     }
 
