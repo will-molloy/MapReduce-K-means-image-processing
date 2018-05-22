@@ -8,8 +8,8 @@ import java.util.Date
 import javax.imageio.ImageIO
 import kmeans.service.imageprocessor.{ParallelImageProcessor, SeqImageProcessor}
 import kmeans.service.seeder.{KMeansPPSeeder, ParallelKMeansPPSeeder, RandomSeeder}
-import kmeans.service.{MapReduceKMeans, SeqKMeans}
-import kmeans.util.{ArgParserFactory, GifEncoder, VideoDecoder}
+import kmeans.service.{KMeans, MapReduceKMeans}
+import kmeans.util.{ArgumentParserFactory, GifEncoder, VideoDecoder}
 import net.sourceforge.argparse4j.inf.ArgumentParserException
 import org.apache.spark.internal.Logging
 import org.apache.spark.rdd.RDD
@@ -26,7 +26,7 @@ object Main extends Logging {
       .setAppName("SE751-Group9-MapReduce-scala-spark-kmeans")
     val context = new SparkContext(config)
     val fileWriter = new FileWriter(new File("%s.log".format(config.get("spark.app.name"))), true)
-    val argParser = ArgParserFactory.get
+    val argParser = ArgumentParserFactory.get
 
     try {
       val ns = argParser.parseArgs(args)
@@ -36,12 +36,16 @@ object Main extends Logging {
       val repeats = ns.getInt("repeats/frames").intValue()
       val seeder = ns.getString("seeder") match {
         case "kmeans++" => new KMeansPPSeeder
-        case "parallelkmeans++" => new ParallelKMeansPPSeeder(context)
+        case "parallelkmeans++" =>
+          ns.getString("parallel") match {
+            case "imagesplit" => new KMeansPPSeeder
+            case _ => new ParallelKMeansPPSeeder(context)
+          }
         case _ => new RandomSeeder
       }
       val kMeans = ns.getString("parallel") match {
         case "mapreduce" => new MapReduceKMeans(seeder, context)
-        case _ => new SeqKMeans(seeder)
+        case _ => new KMeans(seeder)
       }
       val imageProcessor = ns.getString("parallel") match {
         case "imagesplit" => new ParallelImageProcessor(context, seeder)
@@ -49,25 +53,23 @@ object Main extends Logging {
       }
 
       val contentType = Files.probeContentType(Paths.get(pointsFile))
-      val images =
-        if (contentType.contains("video")) {
-          VideoDecoder.decode(pointsFile, repeats)
-        } else if (contentType.contains("image")) {
-          List.fill(repeats)(ImageIO.read(new File(pointsFile)))
-        } else {
-          throw new RuntimeException("Not an image or video file.")
-        }
+      val images = contentType match {
+        case a if a.contains("video") => VideoDecoder.decode(pointsFile, repeats)
+        case a if a.contains("image") => List.fill(repeats)(ImageIO.read(new File(pointsFile)))
+        case _ => throw new RuntimeException("Not an image or video file.")
+      }
 
       // processing in place
       val totalIterations = imageProcessor.process(images, kClusters)
 
-      if (contentType.contains("video")) {
-        GifEncoder.write(images, "%s.gif".format(outFile))
-      } else {
-        images.zipWithIndex.foreach { case (image, i) =>
+      contentType match {
+        case a if a.contains("video") => GifEncoder.write(images, "%s.gif".format(outFile))
+        case _ =>
+          images.zipWithIndex.foreach { case (image, i) =>
           ImageIO.write(image, "png", new File("%s-%d.png".format(outFile, i)))
         }
       }
+
       val df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
       val date = new Date
       val logEntry = ("Completed %s: " +

@@ -1,13 +1,14 @@
 package kmeans.service
 
 import kmeans.model.PointColour
-import kmeans.service.seeder.KMeansSeeder
+import kmeans.service.KMeans.{converged, incrementAndGetImageCount}
+import kmeans.service.seeder.Seeder
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 
 import scala.annotation.tailrec
 
-class MapReduceKMeans(seeder: KMeansSeeder, context: SparkContext) extends SeqKMeans(seeder) {
+class MapReduceKMeans(seeder: Seeder, context: SparkContext) extends KMeans(seeder) {
 
   override def process(points: Array[PointColour], kClusters: Int): (Seq[PointColour], Long) = {
     iter.set(0)
@@ -15,7 +16,7 @@ class MapReduceKMeans(seeder: KMeansSeeder, context: SparkContext) extends SeqKM
     val rddData = context.parallelize(points).cache()
     val result = iterate(rddData, centroids)
     rddData.unpersist()
-    log.info("Image %d processed, final centroids (iterations: %d): %s.".format(SeqKMeans.incrementAndGet, iter.get(), result))
+    log.info("Image %d processed (%d iterations)".format(incrementAndGetImageCount, iter.get()))
     (result, iter.get())
   }
 
@@ -28,7 +29,7 @@ class MapReduceKMeans(seeder: KMeansSeeder, context: SparkContext) extends SeqKM
     */
   @tailrec
   private def iterate(points: RDD[PointColour], centroids: Seq[PointColour]): Seq[PointColour] = {
-    log.info("Centroids changed (iterations: %d): %s.".format(iter.getAndIncrement(), centroids))
+    log.info("Centroids changed (%d iterations)".format(iter.getAndIncrement()))
     val clusters = points
       .map(point => (point closest centroids) -> (point, 1))
       .reduceByKey {
@@ -49,7 +50,5 @@ class MapReduceKMeans(seeder: KMeansSeeder, context: SparkContext) extends SeqKM
 
     if (converged(newCentroids zip centroids)) newCentroids else iterate(points, newCentroids)
   }
-
-  override def clone(): SeqKMeans = new MapReduceKMeans(seeder, context)
 
 }

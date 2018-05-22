@@ -13,9 +13,7 @@ object GifEncoder {
     val output = new FileImageOutputStream(new File(outFileName))
     val writer = new GifSequenceWriter(output, firstImage.getType, 1, false)
 
-    images.foreach(image => {
-      writer.writeToSequence(image)
-    })
+    images.foreach(writer.writeToSequence(_))
     writer.close()
     output.close()
   }

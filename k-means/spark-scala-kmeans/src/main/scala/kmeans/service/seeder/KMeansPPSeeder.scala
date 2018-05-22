@@ -1,42 +1,49 @@
 package kmeans.service.seeder
 
 import kmeans.model.PointColour
+import kmeans.service.seeder.KMeansPPSeeder.{sample, updateDistances}
+import kmeans.util.NumberFormatter
 
 import scala.util.Random
 
-class KMeansPPSeeder extends KMeansSeeder {
+class KMeansPPSeeder extends Seeder {
 
   /**
     * Selects points with probability proportional to their distance from the current set of centroids.
     * This set is updated each iteration for a total of k iterations.
     */
   override def seed(data: Array[PointColour], k: Int): Array[PointColour] = {
-    log.info("KMeans++ init, points %d.".format(data.length))
+    log.info("KMeans++ init, %s points".format(NumberFormatter(data.length)))
     val centroids = new Array[PointColour](k)
-    centroids(0) = data(Random.nextInt(data.length))
-    var costs = data.map(_ dist centroids(0))
+    centroids(0) = PointColour.uniformlyRandom(data)
+    val distances = data.map(_ dist centroids(0))
 
     for (i <- 1 until k) {
-      var weightedRand = costs.sum * Random.nextDouble()
-
-      def sample(): Unit = {
-        for (j <- data.indices) {
-          weightedRand -= costs(j)
-          if (weightedRand < 0) {
-            centroids(i) = data(j)
-            return
-          }
-        }
-      }
-
-      sample()
-
-      // compute distances between each point and this iterations centroids
-      costs = data.zip(costs).map { case (point, cost) =>
-        math.min(point dist centroids(i), cost)
-      }
+      log.info("Iteration %d/%d" format(i, k))
+      centroids(i) = sample(data, distances)
+      updateDistances(distances, data, centroids(i))
     }
     centroids
+  }
+
+}
+
+object KMeansPPSeeder {
+
+  def sample(points: Array[PointColour], costs: Array[Double]): PointColour = {
+    var weightedRand = costs.sum * Random.nextDouble()
+    var i = 0
+    while (i < points.length && weightedRand > 0) {
+      weightedRand -= costs(i)
+      i += 1
+    }
+    points(i - 1)
+  }
+
+  def updateDistances(distances: Array[Double], points: Array[PointColour], centroid: PointColour): Unit = {
+    for (j <- points.indices) {
+      distances(j) = math.min(points(j) dist centroid, distances(j))
+    }
   }
 
 }
