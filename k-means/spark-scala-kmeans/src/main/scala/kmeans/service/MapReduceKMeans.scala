@@ -7,15 +7,16 @@ import org.apache.spark.rdd.RDD
 
 import scala.annotation.tailrec
 
-class MapReduceKMeans(context: SparkContext, seeder: KMeansSeeder) extends SeqKMeans(seeder) {
+class MapReduceKMeans(seeder: KMeansSeeder, context: SparkContext) extends SeqKMeans(seeder) {
 
-  override def process(points: Array[PointColour], kClusters: Int): Seq[PointColour] = {
+  override def process(points: Array[PointColour], kClusters: Int): (Seq[PointColour], Long) = {
     iter.set(0)
     val centroids = seeder.seed(points, kClusters)
     val rddData = context.parallelize(points).cache()
     val result = iterate(rddData, centroids)
     rddData.unpersist()
-    result
+    log.info("Image %d processed, final centroids (iterations: %d): %s.".format(SeqKMeans.incrementAndGet, iter.get(), result))
+    (result, iter.get())
   }
 
   /**
@@ -46,7 +47,9 @@ class MapReduceKMeans(context: SparkContext, seeder: KMeansSeeder) extends SeqKM
       }
     })
 
-    if (converged(newCentroids, centroids)) newCentroids else iterate(points, newCentroids)
+    if (converged(newCentroids zip centroids)) newCentroids else iterate(points, newCentroids)
   }
+
+  override def clone(): SeqKMeans = new MapReduceKMeans(seeder, context)
 
 }
