@@ -22,7 +22,6 @@ object Main extends Logging {
 
     // run the Spark job
     val config = new SparkConf()
-      .setMaster("local[2]")
       .setAppName("SE751-Group9-MapReduce-scala-spark-kmeans")
     val context = new SparkContext(config)
     val fileWriter = new FileWriter(new File("%s.log".format(config.get("spark.app.name"))), true)

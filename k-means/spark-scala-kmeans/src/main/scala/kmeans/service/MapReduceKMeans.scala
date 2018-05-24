@@ -29,7 +29,7 @@ class MapReduceKMeans(seeder: Seeder, context: SparkContext) extends KMeans(seed
     */
   @tailrec
   private def iterate(points: RDD[PointColour], centroids: Seq[PointColour]): Seq[PointColour] = {
-    log.info("Centroids changed (%d iterations)".format(iter.getAndIncrement()))
+    log.info(s"Centroids changed (${iter.getAndIncrement()} iterations)")
     val clusters = points
       .map(point => (point closest centroids) -> (point, 1))
       .reduceByKey {
