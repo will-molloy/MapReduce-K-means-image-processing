@@ -3,7 +3,7 @@ package kmeans.service.imageprocessor
 import java.awt.image.BufferedImage
 
 import kmeans.model.PointColour
-import kmeans.service.KMeans
+import kmeans.service.SeqKMeans
 import kmeans.service.seeder.{KMeansPPSeeder, RandomSeeder, Seeder}
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
@@ -30,10 +30,10 @@ class ParallelImageProcessor(context: SparkContext, seeder: Seeder) extends Imag
   }
 
   def withRandomSeeder(rddData: RDD[Array[PointColour]], kClusters: Int): (Array[Seq[PointColour]], Array[Long]) = {
-    rddData.map(new KMeans(new RandomSeeder).process(_, kClusters)).collect().unzip
+    rddData.map(new SeqKMeans().process(_, kClusters, new RandomSeeder)).collect().unzip
   }
 
   def withKmeansPPSeeder(rddData: RDD[Array[PointColour]], kClusters: Int): (Array[Seq[PointColour]], Array[Long]) = {
-    rddData.map(new KMeans(new KMeansPPSeeder).process(_, kClusters)).collect().unzip
+    rddData.map(new SeqKMeans().process(_, kClusters, new KMeansPPSeeder)).collect().unzip
   }
 }

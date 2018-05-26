@@ -19,7 +19,7 @@ class KMeansPPSeeder extends Seeder {
     val distances = data.map(_ dist centroids(0))
 
     for (i <- 1 until k) {
-      log.info("Iteration %d/%d" format(i, k))
+      log.info("Iteration %d/%d" format(i + 1, k))
       centroids(i) = sample(data, distances)
       updateDistances(distances, data, centroids(i))
     }

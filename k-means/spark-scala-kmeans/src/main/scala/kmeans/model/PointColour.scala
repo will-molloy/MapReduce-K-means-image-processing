@@ -34,5 +34,5 @@ sealed case class PointColour(r: Float, g: Float, b: Float) {
 object PointColour {
   def uniformlyRandom(points: Seq[PointColour]): PointColour = points(Random.nextInt(points.length))
 
-  def average(points: Seq[PointColour]): PointColour = points.reduceLeft(_ + _) / points.length
+  def average(points: Seq[PointColour]): PointColour = points.reduceLeft(_ + _) / points.size
 }

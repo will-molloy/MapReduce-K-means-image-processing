@@ -8,8 +8,8 @@ import java.util.Date
 import javax.imageio.ImageIO
 import kmeans.service.imageprocessor.{ParallelImageProcessor, SeqImageProcessor}
 import kmeans.service.seeder.{KMeansPPSeeder, ParallelKMeansPPSeeder, RandomSeeder}
-import kmeans.service.{KMeans, MapReduceKMeans}
-import kmeans.util.{ArgumentParserFactory, GifEncoder, VideoDecoder}
+import kmeans.service.{MapReduceKMeans, SeqKMeans}
+import kmeans.util._
 import net.sourceforge.argparse4j.inf.ArgumentParserException
 import org.apache.spark.internal.Logging
 import org.apache.spark.rdd.RDD
@@ -17,14 +17,19 @@ import org.apache.spark.{SparkConf, SparkContext}
 
 object Main extends Logging {
 
+  val appName = "SE751-Group9-MapReduce-scala-spark-kmeans"
+  val logFile: String = "%s.log" format appName
+  val csvFile: String = "%s.csv" format appName
+
   def main(args: Array[String]) {
     val start = System.currentTimeMillis()
 
     // run the Spark job
     val config = new SparkConf()
-      .setAppName("SE751-Group9-MapReduce-scala-spark-kmeans")
+      .setMaster("local[*]")
+      .setAppName(appName)
     val context = new SparkContext(config)
-    val fileWriter = new FileWriter(new File("%s.log".format(config.get("spark.app.name"))), true)
+    val fileWriter = new FileWriter(new File(logFile), true)
     val argParser = ArgumentParserFactory.get
 
     try {
@@ -43,12 +48,12 @@ object Main extends Logging {
         case _ => new RandomSeeder
       }
       val kMeans = ns.getString("parallel") match {
-        case "mapreduce" => new MapReduceKMeans(seeder, context)
-        case _ => new KMeans(seeder)
+        case "mapreduce" => new MapReduceKMeans(context)
+        case _ => new SeqKMeans
       }
       val imageProcessor = ns.getString("parallel") match {
         case "imagesplit" => new ParallelImageProcessor(context, seeder)
-        case _ => new SeqImageProcessor(kMeans)
+        case _ => new SeqImageProcessor(kMeans, seeder)
       }
 
       val contentType = Files.probeContentType(Paths.get(pointsFile))
@@ -69,12 +74,12 @@ object Main extends Logging {
         }
       }
 
-      val df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
+      val df = new SimpleDateFormat("yyyy/MM/dd HH-mm-ss")
       val date = new Date
-      val logEntry = ("Completed %s: " +
-        "\nfile: %s, " +
-        "\nimages: %d, clusters: %d, total iterations: %d, time: %dms, " +
-        "\nimage processor: %s, kmeans: %s, seeder: %s.\n\n")
+      val logEntry = ("Completed: %s, " +
+        "file: %s, " +
+        "images: %d, clusters: %d, total iterations: %d, time(ms): %d, " +
+        "image processor: %s, kmeans: %s, seeder: %s\n")
         .format(df.format(date), pointsFile, images.size, kClusters, totalIterations, System.currentTimeMillis() - start,
           imageProcessor.getClass.getSimpleName, kMeans.getClass.getSimpleName, seeder.getClass.getSimpleName)
       log.info(logEntry)
@@ -83,6 +88,7 @@ object Main extends Logging {
       case e: ArgumentParserException => argParser.handleError(e)
       argParser.printHelp()
     } finally {
+      fileWriter.flush()
       fileWriter.close()
     }
   }
