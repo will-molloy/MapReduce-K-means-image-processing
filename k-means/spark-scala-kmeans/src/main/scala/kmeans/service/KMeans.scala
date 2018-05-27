@@ -19,6 +19,7 @@ trait KMeans extends Logging {
     val centroids = seeder.seed(points, kClusters)
     val result = kMeans(points, centroids)
     log.info("Image %d processed (%d iterations)".format(incrementAndGetImageCount, iter.get()))
+    require(result.length == kClusters, "Set of means is not of size k.")
     (result, iter.get())
   }
 

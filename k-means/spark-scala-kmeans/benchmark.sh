@@ -5,7 +5,7 @@ in_dir=out/resources
 out_dir=out/out_dir
 k_repeat="50 1"
 runs=30
-partial_command="spark-submit ${jar} ${in_dir}/10MP.jpg ${out_dir}/out-"
+partial_command="spark-submit --executor-memory 6g ${jar} ${in_dir}/10MP.jpg ${out_dir}/out-"
 
 for i in `seq 1 ${runs}`;
 do

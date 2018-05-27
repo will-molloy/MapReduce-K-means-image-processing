@@ -28,9 +28,7 @@ class MapReduceKMeans(context: SparkContext) extends KMeans {
     log.info(s"Centroids changed (${iter.getAndIncrement()} iterations)")
     val clusters = points
       .map(point => (point closest centroids) -> (point, 1))
-      .reduceByKey {
-        case ((pointA, countA), (pointB, countB)) => (pointA + pointB, countA + countB)
-      }
+      .reduceByKey { case ((pointA, countA), (pointB, countB)) => (pointA + pointB, countA + countB) }
       .collectAsMap
       .mapValues { case (pointSum, countSum) => pointSum / countSum }
 
