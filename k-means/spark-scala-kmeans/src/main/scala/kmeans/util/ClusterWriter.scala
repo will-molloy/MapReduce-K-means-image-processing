@@ -11,6 +11,7 @@ import scala.collection.mutable.ArrayBuffer
 object ClusterWriter {
 
   private val atom: AtomicInteger = new AtomicInteger(0)
+
   /**
     * Method to print the clusters for plotting
     */

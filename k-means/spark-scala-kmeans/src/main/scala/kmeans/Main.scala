@@ -12,7 +12,6 @@ import kmeans.service.{MapReduceKMeans, SeqKMeans}
 import kmeans.util._
 import net.sourceforge.argparse4j.inf.ArgumentParserException
 import org.apache.spark.internal.Logging
-import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
 object Main extends Logging {
@@ -70,8 +69,8 @@ object Main extends Logging {
         case a if a.contains("video") => GifEncoder.write(images, "%s.gif".format(outFile))
         case _ =>
           images.zipWithIndex.foreach { case (image, i) =>
-          ImageIO.write(image, "png", new File("%s-%d.png".format(outFile, i)))
-        }
+            ImageIO.write(image, "png", new File("%s-%d.png".format(outFile, i)))
+          }
       }
 
       val df = new SimpleDateFormat("yyyy/MM/dd HH-mm-ss")
@@ -86,7 +85,7 @@ object Main extends Logging {
       fileWriter.write(logEntry)
     } catch {
       case e: ArgumentParserException => argParser.handleError(e)
-      argParser.printHelp()
+        argParser.printHelp()
     } finally {
       fileWriter.flush()
       fileWriter.close()

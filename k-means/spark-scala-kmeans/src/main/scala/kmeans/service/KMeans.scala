@@ -17,9 +17,8 @@ trait KMeans extends Logging {
     require(kClusters < points.length, "More points than k.")
     iter.set(0)
     val centroids = seeder.seed(points, kClusters)
-    val result = kMeans(points, centroids)
+    val result = kMeans(points, centroids).ensuring(_.length == kClusters, "Set of means is not of size k.")
     log.info("Image %d processed (%d iterations)".format(incrementAndGetImageCount, iter.get()))
-    require(result.length == kClusters, "Set of means is not of size k.")
     (result, iter.get())
   }
 
@@ -52,7 +51,7 @@ object KMeans {
 
   def converged(oldMeans: Seq[PointColour], newMeans: Seq[PointColour]): Boolean = {
     require(oldMeans.length == newMeans.length, "New means length doesn't match old means.")
-    !(oldMeans zip newMeans exists { case (a, b) => (a dist b) > delta })
+    oldMeans zip newMeans forall { case (a, b) => (a dist b) <= delta }
   }
 
 }

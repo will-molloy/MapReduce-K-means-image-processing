@@ -2,7 +2,7 @@ package kmeans.util
 
 import java.io.{BufferedReader, File, FileReader, FileWriter}
 
-import kmeans.Main.{logFile, csvFile}
+import kmeans.Main.{csvFile, logFile}
 
 import scala.collection.JavaConverters._
 
@@ -11,7 +11,7 @@ import scala.collection.JavaConverters._
   */
 object CsvWriter {
 
-  def main(args: Array[String]): Unit ={
+  def main(args: Array[String]): Unit = {
     val reader = new BufferedReader(new FileReader(new File(logFile)))
     val writer = new FileWriter(new File(csvFile)) // overwrite
 

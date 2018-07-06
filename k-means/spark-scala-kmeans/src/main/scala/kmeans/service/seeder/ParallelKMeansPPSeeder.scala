@@ -1,7 +1,6 @@
 package kmeans.service.seeder
 
 import kmeans.model.PointColour
-import kmeans.service.seeder.KMeansPPSeeder.{sample, updateDistances}
 import kmeans.util.NumberFormatter
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
@@ -78,13 +77,13 @@ class ParallelKMeansPPSeeder(val context: SparkContext) extends Seeder {
     val data = weightedData._1
     val weights = weightedData._2.map(_.doubleValue())
     val centroids = new Array[PointColour](k)
-    centroids(0) = sample(data, weights)
+    centroids(0) = KMeansPPSeeder.sample(data, weights)
     val distances = data.map(_ dist centroids(0))
 
     for (i <- 1 until k) {
       log.info("Iteration %d/%d" format(i + 1, k))
-      centroids(i) = sample(data, distances.zip(weights).map(distWeight => distWeight._1 * distWeight._2))
-      updateDistances(distances, data, centroids(i))
+      centroids(i) = KMeansPPSeeder.sample(data, distances.zip(weights).map(distWeight => distWeight._1 * distWeight._2))
+      KMeansPPSeeder.updateDistances(distances, data, centroids(i))
     }
     centroids
   }
